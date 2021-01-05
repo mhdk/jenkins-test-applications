@@ -1,0 +1,44 @@
+<!--
+    This HTML file will serve as a template.
+    The child templates ("home" and "about") will inherit from this.
+    We can insert the code here and it will be applicable to all child
+    pages.
+-->
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+ <head>
+   <meta charset="utf-8">
+   <title>Flask Parent Template</title>
+   
+   <!---Here we are giving the path to where the "template.css" is located--->>
+   <link rel="stylesheet" href="{{ url_for('static',     filename='css/template.css') }}">
+ </head>
+ <body>
+    <header>
+      <div class="container">
+        <h1 class="logo">First Web App</h1>
+        <strong><nav>
+          <ul class="menu">
+            <!---
+                 We use the name of the function url_for() as an argument
+                 The two lines with curly brackets will be replaced by the
+                 content of "home.html" and "about.html". This will depend on
+                 the URL the browser is using.
+
+                 These changes allow the child pages to connect to the parent,
+                 which means we don't have to copy the code for the navigation
+                 menu in to "about.html" and "home.html".
+            --->
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+          </ul>
+        </nav></strong>
+      </div>
+    </header>
+    
+    {% block content %}
+    {% endblock %}
+    
+ </body>
+</html>
