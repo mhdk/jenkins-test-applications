@@ -6,6 +6,10 @@ pipeline {
    }
 
    stages {
+      stage('Initialize Docker'){
+        def dockerHome = tool 'myDocker'
+        env.PATH = "${dockerHome}/bin:${env.PATH}"
+      }
       stage('stage-1') {
          steps {
             echo "This is build number $BUILD_NUMBER of demo $DEMO"

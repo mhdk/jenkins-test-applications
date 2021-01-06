@@ -1,5 +1,6 @@
 pipeline {
     agent {
+        // agent is docker container with this image.
         docker {
             image 'mcr.microsoft.com/dotnet/core/sdk:3.1.101'
         }
@@ -7,6 +8,7 @@ pipeline {
     stages {
         stage('Verify') {
             steps {
+                // executed inside container.
                 sh '''
                   dotnet --list-sdks
                   dotnet --list-runtimes
