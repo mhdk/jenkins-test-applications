@@ -1,0 +1,31 @@
+ --- flaskapp/
+|    |
+|     ---__init__.py
+|    |
+|     --- routes.py
+|    | 
+|     --- static/
+|    |    |
+|          ---css/
+|    |        |
+|    |         --- template.css
+|    |
+|     ---templates/
+|        |
+|         --- about.html
+|        |
+|         --- home.html
+|        |
+|         --- template.html
+|
+ --- run.py
+
+# Here we have a "flaskapp" package and a module called
+# run.py which will run our application.
+
+# The __init__.py file tells python this is a package and
+# also initialises and ties together everything we need for
+# our app.
+
+# We also have the routes.py file which contains the logic
+# for routes.

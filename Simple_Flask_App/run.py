@@ -10,24 +10,11 @@
 # we also create a "css" folder to store our stylesheets.
 #
 
+# We need to import the app to run from our package.
+# This will import from the __init__.py file within that package.
+# So, the "app" variable has to exist within "__init__.py".
+from flaskapp import app
 
-# "render_template" looks for a template (HTML file) in the
-# "templates" folder.
-from flask import Flask, render_template
-
-# creating instance of the Flask class and calling it "app".
-app = Flask(__name__)
-
-# the default page ("localhost:5000/"). Viewing the HTML home file.
-@app.route("/")
-def home():
-    return render_template("home.html")
-
-# another route ("localhost:5000/about"). Viewing the HTML about file.
-@app.route("/about")
-def about():
-    return render_template("about.html")
-    
 if __name__ == "__main__":
     # Run the application. "debug=True" allows python errors
     # to appear on the web page.
