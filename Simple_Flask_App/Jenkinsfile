@@ -18,7 +18,13 @@ pipeline
         }
         stage( 'Run Container' )
         {
-            container = image.run()
+            steps
+            {
+                script
+                {
+                    container = image.run()
+                }
+            }
         }
     }
     
