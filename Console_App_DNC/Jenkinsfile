@@ -12,23 +12,26 @@ pipeline
             steps
             {
                 // Get some code from a GitHub repository
-                git 'https://github.com/whayward-stfc/jenkins-test-applications/Console_App_DNC'
+                git 'https://github.com/whayward-stfc/jenkins-test-applications'
             }
         }
         stage('Build')
         {
             steps
             {
-                script
+                dir('./Console_App_DNC')
                 {
-                    try
+                    script
                     {
-                        sh 'dotnet build ConsoleApp1'
-                    }
-                    finally
-                    {
-                        archiveArtifacts artifacts: 'ConsoleApp1/*.*'
-                    }
+                        try
+                        {
+                            sh 'dotnet build ConsoleApp1'
+                        }
+                        finally
+                        {
+                            archiveArtifacts artifacts: 'ConsoleApp1/*.*'
+                        }
+                    }                    
                 }
             }
         }
@@ -55,10 +58,14 @@ pipeline
     	}
     	stage('Archive')
         {
-    		steps
+            steps
             {
-                archiveArtifacts artifacts: 'ConsoleApp1/*.*'
-            }
+                dir('./Console_App_DNC')
+                {
+                    archiveArtifacts artifacts: 'ConsoleApp1/*.*'
+                }
+
+            }  
     	}        
     }
 }
