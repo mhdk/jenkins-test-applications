@@ -19,6 +19,9 @@ pipeline
         {
             steps
             {
+                // This makes the steps run in a particular directory. We need this because our repo is structured
+                // so that our app files are within the folder "./Console_App_DNC". Usually the repo should be
+                // set up so that these steps are meant to run in the root folder.
                 dir('./Console_App_DNC')
                 {
                     script
