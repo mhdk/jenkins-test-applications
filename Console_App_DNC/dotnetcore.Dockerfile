@@ -1,4 +1,9 @@
 # docker build -t agent-dnc:v1 - < dotnetcore.Dockerfile
+#
+# docker login
+# docker build -t whaywardstfc/jenkins-test/docker-agent-dnc:v1 - < dotnetcore.Dockerfile
+# docker push whaywardstfc/jenkins-test/docker-agent-dnc:v1
+#
 FROM jenkins/jenkins:lts
 USER root
 

@@ -12,7 +12,7 @@ pipeline
             steps
             {
                 // Get some code from a GitHub repository
-                git 'https://github.com/whayward-stfc/jenkins-test-applications'
+                git 'https://github.com/whayward-stfc/jenkins-test-applications/Console_App_DNC'
             }
         }
         stage('Build')
@@ -34,19 +34,31 @@ pipeline
         }
     	stage('Test')
         {
-    		echo 'Execute unit tests'
+    		steps
+            {
+                echo 'Execute unit tests'
+            }
     	}
     	stage('Package')
         {
-    		echo 'Zip it up'
+    		steps
+            {
+                echo 'Zip it up'
+            }
     	}
     	stage('Deploy')
         {
-    		echo 'Push to deployment'
+    		steps
+            {
+                echo 'Push to deployment'
+            }
     	}
     	stage('Archive')
         {
-    		archiveArtifacts artifacts: 'ConsoleApp1/*.*'
+    		steps
+            {
+                archiveArtifacts artifacts: 'ConsoleApp1/*.*'
+            }
     	}        
     }
 }
