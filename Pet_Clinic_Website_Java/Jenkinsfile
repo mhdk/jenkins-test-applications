@@ -1,0 +1,50 @@
+pipeline {
+    
+    agent
+    {
+      label 'docker'
+    }
+    
+    stages 
+    {
+        stage('Build') 
+        {
+            steps 
+            {
+                // Get some code from a GitHub repository
+                git 'https://github.com/whayward-stfc/jenkins-test-applications.git'
+
+                // Using the dir section to get the commands to run in a particualr directory,
+                // because of the structure of the remote repository. In practice there would
+                // only be one app per source code so these commands could be executed at the
+                // root directory of the repo. The same goes for below.
+                dir('./Pet_Clinic_Website_Java')
+                {
+                    // Run Maven on a Unix agent. Cleans the workspace and then packages.
+                    // The mackage command runs "compile", "test" and then "package".
+                    sh "mvn -Dmaven.test.failure.ignore=true clean package"
+
+                    // To run Maven on a Windows agent, use
+                    // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+                }
+
+            }
+
+            // Post-Build steps.
+            post 
+            {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success 
+                {
+                    
+                    dir('./Pet_Clinic_Website_Java')
+                    {
+                        junit '**/target/surefire-reports/TEST-*.xml'
+                        archiveArtifacts 'target/*.jar'
+                    }
+                }
+            }
+        }
+    }
+}
