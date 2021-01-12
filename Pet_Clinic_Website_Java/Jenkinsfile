@@ -2,7 +2,7 @@ pipeline {
     
     agent
     {
-      label 'docker-agent-mavenjdk'
+      label 'docker-mavenjdk'
     }
     
     stages 
