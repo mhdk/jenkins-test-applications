@@ -18,7 +18,7 @@ pipeline {
                 // because of the structure of the remote repository. In practice there would
                 // only be one app per source code so these commands could be executed at the
                 // root directory of the repo. The same goes for below.
-                dir('./Pet_Clinic_Website_Java')
+                dir('./Pet_Clinic_Website_Java/jgsu-spring-petclinic')
                 {
                     // Run Maven on a Unix agent. Cleans the workspace and then packages.
                     // The mackage command runs "compile", "test" and then "package".
@@ -38,7 +38,7 @@ pipeline {
                 success 
                 {
                     
-                    dir('./Pet_Clinic_Website_Java')
+                    dir('./Pet_Clinic_Website_Java/jgsu-spring-petclinic')
                     {
                         junit '**/target/surefire-reports/TEST-*.xml'
                         archiveArtifacts 'target/*.jar'
