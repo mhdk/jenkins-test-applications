@@ -9,21 +9,22 @@ RUN apt-get update && apt-get install -y maven
 # Set the maven home variable and add it to path.
 ENV MAVEN_HOME=/usr/share/maven
 ENV PATH=$PATH:$MAVEN_HOME/bin
+ENV MAVEN_REPO=$MAVEN_HOME/.m2/repository
 
 # Making the directory for the local repository and removing the
 # last line of the settings file so that the tag for the local repository
 # can be added. The settings end tag is then added to the end.
-RUN mkdir $MAVEN_HOME/repository && \
+RUN mkdir -p $MAVEN_REPO && \
     head -n -1 $MAVEN_HOME/conf/settings.xml > temp.txt && \
     mv temp.txt $MAVEN_HOME/conf/settings.xml && \
-    echo '  <localRepository>/${MAVEN_HOME}/repository</localRepository>' \
+    echo '  <localRepository>/${MAVEN_REPO}</localRepository>' \
     >> $MAVEN_HOME/conf/settings.xml && \
-    echo '</settings>' >> $MAVEN_HOME/conf/settings.xml
+    echo '</settings>' >> $MAVEN_HOME/conf/settings.xml && \
+    cp $MAVEN_HOME/conf/settings.xml $MAVEN_HOME/.m2/settings.xml
 
 # Setting env variable for the local repo path and adding the POM
 # file of the project to this path.
-ENV MAVEN_REPO=$MAVEN_HOME/repository
-ADD jgsu-spring-petclinic/pom.xml $MAVEN_REPO 
+ADD jgsu-spring-petclinic/pom.xml $MAVEN_REPO
 
 # TESTING
 # COPY jgsu-spring-petclinic/.  /usr/src
