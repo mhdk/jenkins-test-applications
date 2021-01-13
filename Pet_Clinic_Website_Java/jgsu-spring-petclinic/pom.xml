@@ -291,7 +291,7 @@
     <repository>
       <id>local-repo</id>
       <name>Local Repository</name>
-      <url>file://${MAVEN_REPO}</url>
+      <url>file:///usr/share/maven/repository</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
