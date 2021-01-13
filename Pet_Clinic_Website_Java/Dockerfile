@@ -33,12 +33,14 @@ ADD jgsu-spring-petclinic/pom.xml $MAVEN_REPO
 # Changing directory to the local repo and downloading all the
 # dependencies specified in the POM file there.
 WORKDIR $MAVEN_REPO
-RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline && \
+    chmod -R 777 $MAVEN_REPO
 
 # Changing ownership of repo folder to user 'jenkins'.
 # drop back to the regular jenkins user - good practice
 # RUN chown -R jenkins $MAVEN_REPO
-RUN chmod ugo+rwx $MAVEN_REPO
+# RUN chmod -R a+rwX $MAVEN_REPO
+# RUN chmod -R 777 $MAVEN_REPO
 USER jenkins
 
 ### ************* need to change the run command in jenkinsfile to use the predownloaded
@@ -47,3 +49,14 @@ USER jenkins
 
 # chmod ugo+rwx foldername to give read, write, and execute to everyone.
 # chmod a=r foldername to give only read permission for everyone.
+
+
+
+### ************************************* problem with syntax? file:/usr/share/maven/.m2/repository
+# [INFO] Scanning for projects...
+# [ERROR] [ERROR] Some problems were encountered while processing the POMs:
+# [FATAL] Non-resolvable parent POM for org.springframework.samples:spring-petclinic:2.3.1.BUILD-SNAPSHOT: Cannot access local-repo (file:/usr/share/maven/.m2/repository) in offline mode and the artifact org.springframework.boot:spring-boot-starter-parent:pom:2.3.1.RELEASE has not been downloaded from it before. and 'parent.relativePath' points at wrong local POM @ line 10, column 11
+#  @ 
+# [ERROR] The build could not read 1 project -> [Help 1]
+# org.apache.maven.project.ProjectBuildingException: Some problems were encountered while processing the POMs:
+# [FATAL] Non-resolvable parent POM for org.springframework.samples:spring-petclinic:2.3.1.BUILD-SNAPSHOT: Cannot access local-repo (file:/usr/share/maven/.m2/repository) in offline mode and the artifact org.springframework.boot:spring-boot-starter-parent:pom:2.3.1.RELEASE has not been downloaded from it before. and 'parent.relativePath' points at wrong local POM @ line 10, column 11
