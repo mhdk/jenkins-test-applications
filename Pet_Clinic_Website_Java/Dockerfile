@@ -37,25 +37,13 @@ RUN mvn dependency:go-offline
 
 # Changing ownership of repo folder to user 'jenkins'.
 # drop back to the regular jenkins user - good practice
-RUN chown -R jenkins $MAVEN_REPO
+# RUN chown -R jenkins $MAVEN_REPO
+RUN chmod ugo+rwx $MAVEN_REPO
 USER jenkins
 
 ### ************* need to change the run command in jenkinsfile to use the predownloaded
 ### packages ******************************************
 #RUN mvn verify clean --fail-never
 
-# [DEBUG] Reading global settings from /usr/share/maven/conf/settings.xml
-# [DEBUG] Reading user settings from /var/jenkins_home/.m2/settings.xml
-# [DEBUG] Reading global toolchains from /usr/share/maven/conf/toolchains.xml
-# [DEBUG] Reading user toolchains from /var/jenkins_home/.m2/toolchains.xml
-# [DEBUG] Using local repository at /var/jenkins_home/.m2/repository
-# [DEBUG] Using manager EnhancedLocalRepositoryManager with priority 10.0 for /var/jenkins_home/.m2/repository
-# [INFO] Scanning for projects...
-# [DEBUG] Using transporter WagonTransporter with priority -1.0 for file:///usr/share/maven/repository
-# [DEBUG] Using connector BasicRepositoryConnector with priority 0.0 for file:///usr/share/maven/repository
-# Downloading: file:///usr/share/maven/repository/org/springframework/boot/spring-boot-starter-parent/2.3.1.RELEASE/spring-boot-starter-parent-2.3.1.RELEASE.pom
-
-# [DEBUG] Writing tracking file /var/jenkins_home/.m2/repository/org/springframework/boot/spring-boot-starter-parent/2.3.1.RELEASE/spring-boot-starter-parent-2.3.1.RELEASE.pom.lastUpdated
-# [DEBUG] Using transporter WagonTransporter with priority -1.0 for https://repo.maven.apache.org/maven2
-# [DEBUG] Using connector BasicRepositoryConnector with priority 0.0 for https://repo.maven.apache.org/maven2
-# Downloading: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-parent/2.3.1.RELEASE/spring-boot-starter-parent-2.3.1.RELEASE.pom
+# chmod ugo+rwx foldername to give read, write, and execute to everyone.
+# chmod a=r foldername to give only read permission for everyone.
