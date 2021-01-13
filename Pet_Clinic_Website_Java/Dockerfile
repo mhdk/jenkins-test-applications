@@ -10,28 +10,24 @@ RUN apt-get update && apt-get install -y maven
 ENV MAVEN_HOME=/usr/share/maven
 ENV PATH=$PATH:$MAVEN_HOME/bin
 
-ENV JENKINS_HOME=/var/jenkins_home
-ENV JENKINS_MAVEN_HOME=$JENKINS_HOME/.m2
-ENV MAVEN_REPO=$JENKINS_MAVEN_HOME/repository
-
 # Making the directory for the local repository and removing the
 # last line of the settings file so that the tag for the local repository
 # can be added. The settings end tag is then added to the end.
-RUN mkdir -p $MAVEN_REPO && \
+RUN mkdir $MAVEN_HOME/repository && \
     head -n -1 $MAVEN_HOME/conf/settings.xml > temp.txt && \
     mv temp.txt $MAVEN_HOME/conf/settings.xml && \
-    echo '  <localRepository>/${MAVEN_REPO}</localRepository>' \
+    echo '  <localRepository>/${MAVEN_HOME}/repository</localRepository>' \
     >> $MAVEN_HOME/conf/settings.xml && \
-    echo '</settings>' >> $MAVEN_HOME/conf/settings.xml && \
-    cp $MAVEN_HOME/conf/settings.xml $JENKINS_MAVEN_HOME
+    echo '</settings>' >> $MAVEN_HOME/conf/settings.xml
 
 # Setting env variable for the local repo path and adding the POM
 # file of the project to this path.
+ENV MAVEN_REPO=$MAVEN_HOME/repository
 ADD jgsu-spring-petclinic/pom.xml $MAVEN_REPO 
 
 # TESTING
-COPY jgsu-spring-petclinic/.  /usr/src
-RUN chown -R jenkins /usr/src
+# COPY jgsu-spring-petclinic/.  /usr/src
+# RUN chown -R jenkins /usr/src
 
 # Changing directory to the local repo and downloading all the
 # dependencies specified in the POM file there.
