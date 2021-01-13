@@ -30,8 +30,10 @@ ADD jgsu-spring-petclinic/pom.xml $MAVEN_REPO
 WORKDIR $MAVEN_REPO
 RUN mvn dependency:go-offline
 
+# Changing ownership of repo folder to user 'jenkins'.
 # drop back to the regular jenkins user - good practice
-#USER jenkins
+RUN chown -R jenkins $MAVEN_REPO
+USER jenkins
 
 ### ************* need to change the run command in jenkinsfile to use the predownloaded
 ### packages ******************************************
