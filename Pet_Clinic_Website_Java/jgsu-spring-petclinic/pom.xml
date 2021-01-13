@@ -291,7 +291,7 @@
     <repository>
       <id>local-repo</id>
       <name>Local Repository</name>
-      <url>file:///usr/share/maven/repository</url>
+      <url>file:/var/jenkins_home/.m2/repository</url>
     </repository>
     <!-- <repository>
       <id>spring-snapshots</id>

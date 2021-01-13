@@ -6,32 +6,35 @@ USER root
 # installing maven and adding it to the path.
 RUN apt-get update && apt-get install -y maven
 
-# Set the maven home variable and add it to path.
-ENV MAVEN_HOME=/usr/share/maven
-ENV PATH=$PATH:$MAVEN_HOME/bin
 
+# Setting env variable for the local repo path and 
+# # Set the maven home variable and add it to path.
+# ENV MAVEN_HOME=/usr/share/maven
+# ENV PATH=$PATH:$MAVEN_HOME/bin
 ENV JENKINS_HOME=/var/jenkins_home
-ENV JENKINS_MAVEN_HOME=$JENKINS_HOME/.m2
-ENV MAVEN_REPO=$JENKINS_MAVEN_HOME/repository
+ENV MAVEN_HOME=$JENKINS_HOME/.m2
+ENV MAVEN_REPO=$MAVEN_HOME/repository
+
+ENV MAVEN_ROOT=/usr/share/maven
 
 # Making the directory for the local repository and removing the
 # last line of the settings file so that the tag for the local repository
 # can be added. The settings end tag is then added to the end.
 RUN mkdir -p $MAVEN_REPO && \
-    head -n -1 $MAVEN_HOME/conf/settings.xml > temp.txt && \
-    mv temp.txt $MAVEN_HOME/conf/settings.xml && \
+    cp $MAVEN_ROOT/conf/settings.xml $MAVEN_HOME && \
+    head -n -1 $MAVEN_HOME/settings.xml > temp.txt && \
+    mv temp.txt $MAVEN_HOME/settings.xml && \
     echo '  <localRepository>/${MAVEN_REPO}</localRepository>' \
-    >> $MAVEN_HOME/conf/settings.xml && \
-    echo '</settings>' >> $MAVEN_HOME/conf/settings.xml && \
-    cp $MAVEN_HOME/conf/settings.xml $JENKINS_MAVEN_HOME
+    >> $MAVEN_HOME/settings.xml && \
+    echo '</settings>' >> $MAVEN_HOME/settings.xml
 
-# Setting env variable for the local repo path and adding the POM
+# adding the POM
 # file of the project to this path.
 ADD jgsu-spring-petclinic/pom.xml $MAVEN_REPO 
 
-# TESTING
-COPY jgsu-spring-petclinic/.  /usr/src
-RUN chown -R jenkins /usr/src
+# # TESTING
+# COPY jgsu-spring-petclinic/.  /usr/src
+# RUN chown -R jenkins /usr/src
 
 # Changing directory to the local repo and downloading all the
 # dependencies specified in the POM file there.
