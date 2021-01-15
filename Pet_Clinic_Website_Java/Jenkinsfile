@@ -8,12 +8,7 @@ pipeline {
     stages 
     {
         stage('Build') 
-        {
-            environment
-            {
-                JAVA_TOOL_OPTIONS = '-Duser.home=/usr/share/maven'
-            }
-            
+        {          
             steps 
             {
                 // Get some code from a GitHub repository
@@ -27,7 +22,7 @@ pipeline {
                 {
                     // Run Maven on a Unix agent. Cleans the workspace and then packages.
                     // The mackage command runs "compile", "test" and then "package".
-                    sh "mvn -o -Dmaven.test.failure.ignore=true clean package"
+                    sh "mvn -X -Dmaven.test.failure.ignore=true clean package"
 
                     // To run Maven on a Windows agent, use
                     // bat "mvn -Dmaven.test.failure.ignore=true clean package"

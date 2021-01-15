@@ -287,7 +287,7 @@
     </license>
   </licenses>
 
-  <!-- <repositories>
+  <repositories>
     <repository>
       <id>local-repo</id>
       <name>Local Repository</name>
@@ -309,7 +309,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-  </repositories> -->
+  </repositories>
   <pluginRepositories>
     <pluginRepository>
       <id>spring-snapshots</id>

@@ -1,62 +1,53 @@
-FROM jenkins/jenkins:lts
-
-# for installing via apt
+FROM jenkins/jenkins:lts-alpine
+# ----
+# Install Maven
 USER root
 
-# installing maven and adding it to the path.
-RUN apt-get update && apt-get install -y maven
+RUN apk add --no-cache curl tar bash
+
+ARG MAVEN_VERSION=3.3.9
 
 # Set the maven home variable and add it to path.
 ENV MAVEN_HOME=/usr/share/maven
 ENV PATH=$PATH:$MAVEN_HOME/bin
-ENV MAVEN_REPO=$MAVEN_HOME/.m2/repository
 
-# Making the directory for the local repository and removing the
-# last line of the settings file so that the tag for the local repository
-# can be added. The settings end tag is then added to the end.
+RUN mkdir -p $MAVEN_HOME && \
+curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz \
+| tar -xzC $MAVEN_HOME --strip-components=1 && \
+ln -s $MAVEN_HOME/mvn /usr/bin/mvn
+
+ENV JENKINS_HOME=/var/jenkins_home
+ENV JENKINS_MAVEN_HOME=$JENKINS_HOME/.m2
+ENV MAVEN_REPO=$JENKINS_MAVEN_HOME/repository
+
 RUN mkdir -p $MAVEN_REPO && \
     head -n -1 $MAVEN_HOME/conf/settings.xml > temp.txt && \
     mv temp.txt $MAVEN_HOME/conf/settings.xml && \
     echo '  <localRepository>/${MAVEN_REPO}</localRepository>' \
     >> $MAVEN_HOME/conf/settings.xml && \
     echo '</settings>' >> $MAVEN_HOME/conf/settings.xml && \
-    cp $MAVEN_HOME/conf/settings.xml $MAVEN_HOME/.m2/settings.xml
+    cp $MAVEN_HOME/conf/settings.xml $JENKINS_MAVEN_HOME
 
-# Setting env variable for the local repo path and adding the POM
-# file of the project to this path.
-ADD jgsu-spring-petclinic/pom.xml $MAVEN_REPO
+# speed up Maven JVM a bit
+ENV MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+# ENTRYPOINT ["/usr/bin/mvn"]
 
-# TESTING
-# COPY jgsu-spring-petclinic/.  /usr/src
-# RUN chown -R jenkins /usr/src
+# ----
+# Install project dependencies and keep sources
+# make source folder
 
-# Changing directory to the local repo and downloading all the
-# dependencies specified in the POM file there.
-WORKDIR $MAVEN_REPO
-RUN mvn dependency:go-offline && \
-    chmod -R 777 $MAVEN_REPO
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
-# Changing ownership of repo folder to user 'jenkins'.
-# drop back to the regular jenkins user - good practice
-# RUN chown -R jenkins $MAVEN_REPO
-# RUN chmod -R a+rwX $MAVEN_REPO
-# RUN chmod -R 777 $MAVEN_REPO
+# install maven dependency packages (keep in image)
+COPY jgsu-spring-petclinic/pom.xml /usr/src/app
+RUN mvn dependency:go-offline && rm -rf target
+
+RUN chown -R jenkins $MAVEN_REPO 
+# RUN chmod a+rwx $MAVEN_REPO
+
+RUN chown -R jenkins $MAVEN_HOME 
+
+# copy other source files (keep in image)
+# COPY jgsu-spring-petclinic/src /usr/src/app/src
 USER jenkins
-
-### ************* need to change the run command in jenkinsfile to use the predownloaded
-### packages ******************************************
-#RUN mvn verify clean --fail-never
-
-# chmod ugo+rwx foldername to give read, write, and execute to everyone.
-# chmod a=r foldername to give only read permission for everyone.
-
-
-
-### ************************************* problem with syntax? file:/usr/share/maven/.m2/repository
-# [INFO] Scanning for projects...
-# [ERROR] [ERROR] Some problems were encountered while processing the POMs:
-# [FATAL] Non-resolvable parent POM for org.springframework.samples:spring-petclinic:2.3.1.BUILD-SNAPSHOT: Cannot access local-repo (file:/usr/share/maven/.m2/repository) in offline mode and the artifact org.springframework.boot:spring-boot-starter-parent:pom:2.3.1.RELEASE has not been downloaded from it before. and 'parent.relativePath' points at wrong local POM @ line 10, column 11
-#  @ 
-# [ERROR] The build could not read 1 project -> [Help 1]
-# org.apache.maven.project.ProjectBuildingException: Some problems were encountered while processing the POMs:
-# [FATAL] Non-resolvable parent POM for org.springframework.samples:spring-petclinic:2.3.1.BUILD-SNAPSHOT: Cannot access local-repo (file:/usr/share/maven/.m2/repository) in offline mode and the artifact org.springframework.boot:spring-boot-starter-parent:pom:2.3.1.RELEASE has not been downloaded from it before. and 'parent.relativePath' points at wrong local POM @ line 10, column 11
