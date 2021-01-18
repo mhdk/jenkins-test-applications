@@ -1,11 +1,11 @@
 FROM jenkins/jenkins:lts-alpine
-# ----
+
 # Install Maven
 USER root
 
 RUN apk add --no-cache curl tar bash
 
-ARG MAVEN_VERSION=3.3.9
+ARG MAVEN_VERSION=3.6.3
 
 # Set the maven home variable and add it to path.
 ENV MAVEN_HOME=/usr/share/maven
@@ -25,29 +25,41 @@ RUN mkdir -p $MAVEN_REPO && \
     mv temp.txt $MAVEN_HOME/conf/settings.xml && \
     echo '  <localRepository>/${MAVEN_REPO}</localRepository>' \
     >> $MAVEN_HOME/conf/settings.xml && \
-    echo '</settings>' >> $MAVEN_HOME/conf/settings.xml && \
-    cp $MAVEN_HOME/conf/settings.xml $JENKINS_MAVEN_HOME
+    echo '</settings>' >> $MAVEN_HOME/conf/settings.xml 
 
 # speed up Maven JVM a bit
 ENV MAVEN_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
-# ENTRYPOINT ["/usr/bin/mvn"]
 
-# ----
 # Install project dependencies and keep sources
-# make source folder
-
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # install maven dependency packages (keep in image)
 COPY jgsu-spring-petclinic/pom.xml /usr/src/app
-RUN mvn dependency:go-offline && rm -rf target
+RUN mvn dependency:go-offline 
 
 RUN chown -R jenkins $MAVEN_REPO 
-# RUN chmod a+rwx $MAVEN_REPO
+RUN chown -R jenkins $MAVEN_HOME
 
-RUN chown -R jenkins $MAVEN_HOME 
+USER jenkins
+
+
+
+    
+    # && \
+    # cp $MAVEN_HOME/conf/settings.xml $JENKINS_MAVEN_HOME
+
+# ENTRYPOINT ["/usr/bin/mvn"]
+
+#&& rm -rf target
+
+# RUN chmod a+rwx $MAVEN_REPO
 
 # copy other source files (keep in image)
 # COPY jgsu-spring-petclinic/src /usr/src/app/src
-USER jenkins
+
+# RUN whoami && id && \
+# RUN mvn -X -Dmaven.test.failure.ignore=true clean package
+
+
+

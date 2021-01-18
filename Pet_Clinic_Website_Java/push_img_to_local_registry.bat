@@ -4,7 +4,7 @@ docker stop testcontainer
 docker rm testcontainer
 
 @REM Couldn't use "- < mavenjdkagent.Dockerfile" as the "ADD" command
-@REM wouldn't find the directory to copy from.
+@REM wouldn't find the directory to copy from. --no-cache
 docker build --no-cache -t localhost:5000/docker-agent-mavenjdk:v1 .
 docker push localhost:5000/docker-agent-mavenjdk:v1
 
