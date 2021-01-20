@@ -1,0 +1,34 @@
+pipeline 
+{
+    agent
+    {
+        label 'docker'
+    }
+    stages {
+        stage('SCM')
+        {
+            steps
+            {
+                sh """wget https://raw.githubusercontent.com/whayward-stfc/jenkins-test-applications/master/Pet_Clinic_Website_Java/Dockerfile
+                      wget https://raw.githubusercontent.com/whayward-stfc/jenkins-test-applications/master/Pet_Clinic_Website_Java/jgsu-spring-petclinic/pom.xml
+                      mkdir jgsu-spring-petclinic && mv pom.xml jgsu-spring-petclinic/pom.xml                                                                    
+                   """
+            }
+        }
+        stage('Build')
+        {
+            steps
+            {
+               sh "docker build --no-cache -t 192.168.1.172:5000/docker-agent-mavenjdk:v${env.BUILD_NUMBER} ."    
+            }
+
+        }
+        stage('Push')
+        {
+            steps
+            {
+                sh "docker push 192.168.1.172:5000/docker-agent-mavenjdk:v${env.BUILD_NUMBER}"
+            }
+        }
+    }
+}
