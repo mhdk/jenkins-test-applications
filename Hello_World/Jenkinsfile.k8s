@@ -1,0 +1,13 @@
+pipeline {
+    agent{
+        label 'kubernetes-agent'
+    }
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+    }
+}
