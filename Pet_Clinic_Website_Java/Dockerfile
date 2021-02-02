@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts-alpine
+FROM jenkins/inbound-agent:alpine
 
 # Install Maven
 USER root
@@ -8,7 +8,7 @@ RUN apk add --no-cache curl tar bash
 ARG MAVEN_VERSION=3.6.3
 
 # Set the maven home variable and add it to path.
-ENV MAVEN_HOME=/home/jenkins
+ENV MAVEN_HOME=/usr/share/maven
 ENV PATH=$PATH:$MAVEN_HOME/bin
 
 RUN mkdir -p $MAVEN_HOME && \
@@ -16,7 +16,7 @@ curl -fsSL http://apache.osuosl.org/maven/maven-3/$MAVEN_VERSION/binaries/apache
 | tar -xzC $MAVEN_HOME --strip-components=1 && \
 ln -s $MAVEN_HOME/mvn /usr/bin/mvn
 
-ENV JENKINS_HOME=/var/jenkins_home
+ENV JENKINS_HOME=/home/jenkins
 ENV JENKINS_MAVEN_HOME=$JENKINS_HOME/.m2
 ENV MAVEN_REPO=$JENKINS_MAVEN_HOME/repository
 
