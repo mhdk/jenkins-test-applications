@@ -2,7 +2,7 @@ pipeline
 {
     agent
     {
-        label 'docker'
+        label 'kubernetes-agent'
     }
     stages {
         stage('SCM')
@@ -24,7 +24,7 @@ pipeline
             {
                container('docker')
                {
-                   sh "docker build --no-cache -t 192.168.1.172:5000/docker-agent-mavenjdk:v${env.BUILD_NUMBER} ."   
+                   sh "docker build --no-cache -t 192.168.1.156:31320/docker-agent-mavenjdk:v${env.BUILD_NUMBER} ."   
                } 
             }
 
@@ -33,7 +33,7 @@ pipeline
         // {
         //     steps
         //     {
-        //         sh "docker push 192.168.1.172:5000/docker-agent-mavenjdk:v${env.BUILD_NUMBER}"
+        //         sh "docker push 192.168.1.156:31320/docker-agent-mavenjdk:v${env.BUILD_NUMBER}"
         //     }
         // }
     }
