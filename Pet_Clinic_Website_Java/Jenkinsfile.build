@@ -31,9 +31,9 @@ pipeline
         }
         stage('Push')
         {
-            container('docker')
+            steps
             {
-                steps
+                container('docker')
                 {
                     sh "docker push 192.168.1.156:31320/docker-agent-mavenjdk:v${env.BUILD_NUMBER}"
                 }
