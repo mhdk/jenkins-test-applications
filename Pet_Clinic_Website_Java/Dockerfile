@@ -42,24 +42,3 @@ RUN chown -R jenkins $MAVEN_REPO
 RUN chown -R jenkins $MAVEN_HOME
 
 USER jenkins
-
-
-
-    
-    # && \
-    # cp $MAVEN_HOME/conf/settings.xml $JENKINS_MAVEN_HOME
-
-# ENTRYPOINT ["/usr/bin/mvn"]
-
-#&& rm -rf target
-
-# RUN chmod a+rwx $MAVEN_REPO
-
-# copy other source files (keep in image)
-# COPY jgsu-spring-petclinic/src /usr/src/app/src
-
-# RUN whoami && id && \
-# RUN mvn -X -Dmaven.test.failure.ignore=true clean package
-
-
-
