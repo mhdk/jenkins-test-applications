@@ -8,7 +8,7 @@ RUN apk add --no-cache curl tar bash
 ARG MAVEN_VERSION=3.6.3
 
 # Set the maven home variable and add it to path.
-ENV MAVEN_HOME=/usr/share/maven
+ENV MAVEN_HOME=/home/jenkins
 ENV PATH=$PATH:$MAVEN_HOME/bin
 
 RUN mkdir -p $MAVEN_HOME && \
