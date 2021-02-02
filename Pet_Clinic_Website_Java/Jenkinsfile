@@ -2,7 +2,7 @@ pipeline {
     
     agent
     {
-      label 'docker-mavenjdk'
+      label 'kubernetes-agent-mavenjdk'
     }
     
     stages 
