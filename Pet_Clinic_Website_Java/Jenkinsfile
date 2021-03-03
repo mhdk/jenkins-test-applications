@@ -49,7 +49,10 @@ pipeline {
 
         stage('Which Branch')
         {
-            sh "echo 'You are on testbranch'"
+            steps
+            {
+                sh "echo 'You are on testbranch'"
+            }
         }
     }
 }
