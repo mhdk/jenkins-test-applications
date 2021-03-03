@@ -1,15 +1,15 @@
 pipeline {
-    
+
     agent
     {
       label 'kubernetes-agent-mavenjdk'
     }
-    
-    stages 
+
+    stages
     {
-        stage('Build') 
-        {          
-            steps 
+        stage('Build')
+        {
+            steps
             {
                 // Get some code from a GitHub repository
                 git 'https://github.com/whayward-stfc/jenkins-test-applications.git'
@@ -31,13 +31,13 @@ pipeline {
             }
 
             // Post-Build steps.
-            post 
+            post
             {
                 // If Maven was able to run the tests, even if some of the test
                 // failed, record the test results and archive the jar file.
-                success 
+                success
                 {
-                    
+
                     dir('./Pet_Clinic_Website_Java/jgsu-spring-petclinic')
                     {
                         junit '**/target/surefire-reports/TEST-*.xml'
@@ -45,6 +45,11 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage('Which Branch')
+        {
+            sh "echo 'You are on testbranch'"
         }
     }
 }
