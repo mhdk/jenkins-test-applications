@@ -12,7 +12,7 @@ pipeline {
             steps 
             {
                 // Get some code from a GitHub repository
-                git 'https://github.com/whayward-stfc/jenkins-test-applications.git'
+                git 'https://github.com/mhdk/jenkins-test-applications.git'
 
                 // Using the dir section to get the commands to run in a particualr directory,
                 // because of the structure of the remote repository. In practice there would

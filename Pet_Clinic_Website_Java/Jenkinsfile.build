@@ -11,8 +11,8 @@ pipeline
             {
                 container('docker')
                 {
-                    sh """wget https://raw.githubusercontent.com/whayward-stfc/jenkins-test-applications/master/Pet_Clinic_Website_Java/Dockerfile
-                          wget https://raw.githubusercontent.com/whayward-stfc/jenkins-test-applications/master/Pet_Clinic_Website_Java/jgsu-spring-petclinic/pom.xml
+                    sh """wget https://raw.githubusercontent.com/mhdk/jenkins-test-applications/master/Pet_Clinic_Website_Java/Dockerfile
+                          wget https://raw.githubusercontent.com/mhdk/jenkins-test-applications/master/Pet_Clinic_Website_Java/jgsu-spring-petclinic/pom.xml
                           mkdir jgsu-spring-petclinic && mv pom.xml jgsu-spring-petclinic/pom.xml                                                                    
                        """
                 }

@@ -12,7 +12,7 @@ pipeline
             steps
             {
                 // Get some code from a GitHub repository
-                git 'https://github.com/whayward-stfc/jenkins-test-applications'
+                git 'https://github.com/mhdk/jenkins-test-applications'
             }
         }
         stage('Build')
